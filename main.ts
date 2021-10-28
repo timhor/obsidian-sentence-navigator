@@ -5,6 +5,8 @@ import {
   Plugin,
   PluginSettingTab,
   Setting,
+  Editor,
+  MarkdownView
 } from 'obsidian';
 
 interface MyPluginSettings {
@@ -23,29 +25,113 @@ export default class MyPlugin extends Plugin {
 
     await this.loadSettings();
 
-    this.addRibbonIcon('dice', 'Sample Plugin', () => {
-      new Notice('This is a notice!');
-    });
+		this.addCommand({
+			id: 'Delete-backwards-sentence',
+			name: 'Delete to beginning of sentence',
+			hotkeys: [{ modifiers: ["Mod","Shift"], key:"Backspace"}],
+			editorCallback: (editor: Editor) => {
+				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
+				const cursorPosition = editor.getCursor();
+				console.log("This is the cursor position", cursorPosition)
+				let lineText = editor.getLine(cursorPosition.line);
+				//let sentences = lineText.matchAll(/[.?!] /gm);
+				let sentences = lineText.matchAll(wholeSentenceRegex);
+				for(const sentence of sentences) {
+					if (sentence.index<cursorPosition.ch && cursorPosition.ch <sentence.index+sentence[0].length){
+						let cursorPositionInSentence = cursorPosition.ch-sentence.index;
+						let cutportion=sentence[0].substring(0,cursorPositionInSentence);
+						let newpar=lineText.replace(cutportion,"");
+						editor.setLine(cursorPosition.line,newpar);
+						editor.setCursor({line:cursorPosition.line,ch:cursorPosition.ch-cutportion.length});
+						// editor.setCursor(sentence.index);
+					}
+				}
+			}
+		});
 
-    this.addStatusBarItem().setText('Status Bar Text');
+		this.addCommand({
+			id: 'Delete-forward-sentence',
+			name: 'Delete to end of sentence',
+			hotkeys: [{ modifiers: ["Mod","Shift"], key:"Delete"}],
+			editorCallback: (editor: Editor) => {
+				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
+				const cursorPosition = editor.getCursor();
+				console.log("This is the cursor position", cursorPosition)
+				let lineText = editor.getLine(cursorPosition.line);
+				//let sentences = lineText.matchAll(/[.?!] /gm);
+				let sentences = lineText.matchAll(wholeSentenceRegex);
+				for(const sentence of sentences) {
+					if (sentence.index<cursorPosition.ch && cursorPosition.ch <sentence.index+sentence[0].length){
+						let cursorPositionInSentence = cursorPosition.ch-sentence.index;
+						let cutportion=sentence[0].substring(cursorPositionInSentence);
+						console.log(cutportion);
+						let newpar=lineText.replace(cutportion,"");
+						editor.setLine(cursorPosition.line,newpar);
+						editor.setCursor({line:cursorPosition.line,ch:cursorPosition.ch});
+						// editor.setCursor(sentence.index);
+					}
+				}
+			}
+		});
 
-    this.addCommand({
-      id: 'open-sample-modal',
-      name: 'Open Sample Modal',
-      // callback: () => {
-      // 	console.log('Simple Callback');
-      // },
-      checkCallback: (checking: boolean) => {
-        let leaf = this.app.workspace.activeLeaf;
-        if (leaf) {
-          if (!checking) {
-            new SampleModal(this.app).open();
-          }
-          return true;
-        }
-        return false;
-      },
-    });
+		this.addCommand({
+			id: 'Move-backwards-sentence',
+			name: 'Move to beginning of sentence',
+			hotkeys: [{ modifiers: ["Mod","Alt"], key:"Left"}],
+			editorCallback: (editor: Editor) => {
+				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
+				const cursorPosition = editor.getCursor();
+				console.log("This is the cursor position", cursorPosition)
+				let lineText = editor.getLine(cursorPosition.line);
+				//let sentences = lineText.matchAll(/[.?!] /gm);
+				let sentences = lineText.matchAll(wholeSentenceRegex);
+				for(const sentence of sentences) {
+					if (sentence.index<cursorPosition.ch && cursorPosition.ch <sentence.index+sentence[0].length){
+						editor.setCursor({line:cursorPosition.line,ch:sentence.index-2});
+						// editor.setCursor(sentence.index);
+					}
+				}
+			}
+		});
+
+		this.addCommand({
+			id: 'Move-forwards-sentence',
+			name: 'Move to start of next sentence',
+			hotkeys: [{ modifiers: ["Mod","Alt"], key:"Right"}],
+			editorCallback: (editor: Editor) => {
+				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
+				const cursorPosition = editor.getCursor();
+				console.log("This is the cursor position", cursorPosition)
+				let lineText = editor.getLine(cursorPosition.line);
+				//let sentences = lineText.matchAll(/[.?!] /gm);
+				let sentences = lineText.matchAll(wholeSentenceRegex);
+				for(const sentence of sentences) {
+					if (sentence.index<cursorPosition.ch && cursorPosition.ch <sentence.index+sentence[0].length){
+						editor.setCursor({line:cursorPosition.line,ch:sentence.index+sentence[0].length+1});
+						// editor.setCursor(sentence.index);
+					}
+				}
+			}
+		});
+
+		this.addCommand({
+			id: 'Select Sentence',
+			name: 'select-sentence',
+			editorCallback: (editor: Editor) => {
+				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
+				const cursorPosition = editor.getCursor();
+//				console.log("This is the cursor position", cursorPosition)
+				let lineText = editor.getLine(cursorPosition.line);
+				//let sentences = lineText.matchAll(/[.?!] /gm);
+				let sentences = lineText.matchAll(wholeSentenceRegex);
+				for(const sentence of sentences) {
+					if (sentence.index-2<cursorPosition.ch && cursorPosition.ch <sentence.index+sentence[0].length){
+						editor.setSelection({line:cursorPosition.line,ch:sentence.index-1},{line:cursorPosition.line,ch:sentence.index+sentence[0].length});
+						// editor.setCursor(sentence.index);
+					}
+				}	
+			}
+		})
 
     this.addSettingTab(new SampleSettingTab(this.app, this));
 

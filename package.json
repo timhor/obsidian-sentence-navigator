@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "rollup --config rollup.config.js -w",
-    "build": "rollup --config rollup.config.js --environment BUILD:production"
+    "build": "rollup --config rollup.config.js"
   },
   "keywords": [],
   "author": "Tim Hor",
@@ -19,7 +19,7 @@
     "lint-staged": "^11.2.0",
     "obsidian": "^0.12.0",
     "prettier": "^2.4.1",
-    "rollup": "^2.32.1",
+    "rollup": "^2.58.1",
     "tslib": "^2.2.0",
     "typescript": "^4.2.4"
   },
