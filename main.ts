@@ -6,7 +6,6 @@ import {
   PluginSettingTab,
   Setting,
   Editor,
-  MarkdownView
 } from 'obsidian';
 
 interface MyPluginSettings {
@@ -37,10 +36,10 @@ export default class MyPlugin extends Plugin {
 				//let sentences = lineText.matchAll(/[.?!] /gm);
 				let sentences = lineText.matchAll(wholeSentenceRegex);
 				for(const sentence of sentences) {
-					if (sentence.index<cursorPosition.ch && cursorPosition.ch <sentence.index+sentence[0].length){
+					if ( cursorPosition.ch >=sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
 						let cursorPositionInSentence = cursorPosition.ch-sentence.index;
 						let cutportion=sentence[0].substring(0,cursorPositionInSentence);
-						let newpar=lineText.replace(cutportion,"");
+						let newpar=lineText.replace(cutportion," ");
 						editor.setLine(cursorPosition.line,newpar);
 						editor.setCursor({line:cursorPosition.line,ch:cursorPosition.ch-cutportion.length});
 						// editor.setCursor(sentence.index);
@@ -61,7 +60,7 @@ export default class MyPlugin extends Plugin {
 				//let sentences = lineText.matchAll(/[.?!] /gm);
 				let sentences = lineText.matchAll(wholeSentenceRegex);
 				for(const sentence of sentences) {
-					if (sentence.index<cursorPosition.ch && cursorPosition.ch <sentence.index+sentence[0].length){
+					if ( cursorPosition.ch >=sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
 						let cursorPositionInSentence = cursorPosition.ch-sentence.index;
 						let cutportion=sentence[0].substring(cursorPositionInSentence);
 						console.log(cutportion);
@@ -77,7 +76,7 @@ export default class MyPlugin extends Plugin {
 		this.addCommand({
 			id: 'Move-backwards-sentence',
 			name: 'Move to beginning of sentence',
-			hotkeys: [{ modifiers: ["Mod","Alt"], key:"Left"}],
+			hotkeys: [{ modifiers: ["Alt"], key:"Left"}],
 			editorCallback: (editor: Editor) => {
 				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
 				const cursorPosition = editor.getCursor();
@@ -86,7 +85,7 @@ export default class MyPlugin extends Plugin {
 				//let sentences = lineText.matchAll(/[.?!] /gm);
 				let sentences = lineText.matchAll(wholeSentenceRegex);
 				for(const sentence of sentences) {
-					if (sentence.index<cursorPosition.ch && cursorPosition.ch <sentence.index+sentence[0].length){
+					if ( cursorPosition.ch >=sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
 						editor.setCursor({line:cursorPosition.line,ch:sentence.index-2});
 						// editor.setCursor(sentence.index);
 					}
@@ -97,7 +96,7 @@ export default class MyPlugin extends Plugin {
 		this.addCommand({
 			id: 'Move-forwards-sentence',
 			name: 'Move to start of next sentence',
-			hotkeys: [{ modifiers: ["Mod","Alt"], key:"Right"}],
+			hotkeys: [{ modifiers: ["Mod"], key:"Right"}],
 			editorCallback: (editor: Editor) => {
 				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
 				const cursorPosition = editor.getCursor();
@@ -106,14 +105,16 @@ export default class MyPlugin extends Plugin {
 				//let sentences = lineText.matchAll(/[.?!] /gm);
 				let sentences = lineText.matchAll(wholeSentenceRegex);
 				for(const sentence of sentences) {
-					if (sentence.index<cursorPosition.ch && cursorPosition.ch <sentence.index+sentence[0].length){
+					if (cursorPosition.ch>= sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
+						console.log(`cursor position before move: char is ${cursorPosition.ch} \non line (paragraph): ${cursorPosition.line} \nsentence index is ${sentence.index}\n sentence is ${sentence[0].length} chars long`);
 						editor.setCursor({line:cursorPosition.line,ch:sentence.index+sentence[0].length+1});
+						console.log(`cursor position before move: char is ${cursorPosition.ch}\non line (paragraph): ${cursorPosition.line} \nsentence index is ${sentence.index}\n sentence is ${sentence[0].length} chars long`);
 						// editor.setCursor(sentence.index);
 					}
 				}
 			}
 		});
-
+// comment to make it compile
 		this.addCommand({
 			id: 'Select Sentence',
 			name: 'select-sentence',
