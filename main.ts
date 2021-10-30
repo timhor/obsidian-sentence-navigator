@@ -32,14 +32,14 @@ export default class MyPlugin extends Plugin {
 				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
 				const cursorPosition = editor.getCursor();
 				console.log("This is the cursor position", cursorPosition)
-				let lineText = editor.getLine(cursorPosition.line);
-				//let sentences = lineText.matchAll(/[.?!] /gm);
-				let sentences = lineText.matchAll(wholeSentenceRegex);
+				let paragraphText = editor.getLine(cursorPosition.line);
+				//let sentences = paragraphText.matchAll(/[.?!] /gm);
+				let sentences = paragraphText.matchAll(wholeSentenceRegex);
 				for(const sentence of sentences) {
 					if ( cursorPosition.ch >=sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
 						let cursorPositionInSentence = cursorPosition.ch-sentence.index;
 						let cutportion=sentence[0].substring(0,cursorPositionInSentence);
-						let newpar=lineText.replace(cutportion," ");
+						let newpar=paragraphText.replace(cutportion," ");
 						editor.setLine(cursorPosition.line,newpar);
 						editor.setCursor({line:cursorPosition.line,ch:cursorPosition.ch-cutportion.length});
 						// editor.setCursor(sentence.index);
@@ -56,15 +56,15 @@ export default class MyPlugin extends Plugin {
 				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
 				const cursorPosition = editor.getCursor();
 				console.log("This is the cursor position", cursorPosition)
-				let lineText = editor.getLine(cursorPosition.line);
-				//let sentences = lineText.matchAll(/[.?!] /gm);
-				let sentences = lineText.matchAll(wholeSentenceRegex);
+				let paragraphText = editor.getLine(cursorPosition.line);
+				//let sentences = paragraphText.matchAll(/[.?!] /gm);
+				let sentences = paragraphText.matchAll(wholeSentenceRegex);
 				for(const sentence of sentences) {
 					if ( cursorPosition.ch >=sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
 						let cursorPositionInSentence = cursorPosition.ch-sentence.index;
 						let cutportion=sentence[0].substring(cursorPositionInSentence);
 						console.log(cutportion);
-						let newpar=lineText.replace(cutportion,"");
+						let newpar=paragraphText.replace(cutportion,"");
 						editor.setLine(cursorPosition.line,newpar);
 						editor.setCursor({line:cursorPosition.line,ch:cursorPosition.ch});
 						// editor.setCursor(sentence.index);
@@ -81,9 +81,9 @@ export default class MyPlugin extends Plugin {
 				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
 				const cursorPosition = editor.getCursor();
 				console.log("This is the cursor position", cursorPosition)
-				let lineText = editor.getLine(cursorPosition.line);
-				//let sentences = lineText.matchAll(/[.?!] /gm);
-				let sentences = lineText.matchAll(wholeSentenceRegex);
+				let paragraphText = editor.getLine(cursorPosition.line);
+				//let sentences = paragraphText.matchAll(/[.?!] /gm);
+				let sentences = paragraphText.matchAll(wholeSentenceRegex);
 				for(const sentence of sentences) {
 					if ( cursorPosition.ch >=sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
 						editor.setCursor({line:cursorPosition.line,ch:sentence.index-2});
@@ -101,20 +101,20 @@ export default class MyPlugin extends Plugin {
 				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
 				const cursorPosition = editor.getCursor();
 				console.log("This is the cursor position", cursorPosition)
-				let lineText = editor.getLine(cursorPosition.line);
-				//let sentences = lineText.matchAll(/[.?!] /gm);
-				let sentences = lineText.matchAll(wholeSentenceRegex);
+				let paragraphText = editor.getLine(cursorPosition.line);
+				//let sentences = paragraphText.matchAll(/[.?!] /gm);
+				let sentences = paragraphText.matchAll(wholeSentenceRegex);
 				for(const sentence of sentences) {
 					if (cursorPosition.ch>= sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
 						console.log(`cursor position before move: char is ${cursorPosition.ch} \non line (paragraph): ${cursorPosition.line} \nsentence index is ${sentence.index}\n sentence is ${sentence[0].length} chars long`);
 						editor.setCursor({line:cursorPosition.line,ch:sentence.index+sentence[0].length+1});
-						console.log(`cursor position before move: char is ${cursorPosition.ch}\non line (paragraph): ${cursorPosition.line} \nsentence index is ${sentence.index}\n sentence is ${sentence[0].length} chars long`);
+						console.log(`cursor position after move: char is ${cursorPosition.ch}\non line (paragraph): ${cursorPosition.line} \nsentence index is ${sentence.index}\n sentence is ${sentence[0].length} chars long`);
 						// editor.setCursor(sentence.index);
 					}
 				}
 			}
 		});
-// comment to make it compile
+
 		this.addCommand({
 			id: 'Select Sentence',
 			name: 'select-sentence',
@@ -122,9 +122,9 @@ export default class MyPlugin extends Plugin {
 				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
 				const cursorPosition = editor.getCursor();
 //				console.log("This is the cursor position", cursorPosition)
-				let lineText = editor.getLine(cursorPosition.line);
-				//let sentences = lineText.matchAll(/[.?!] /gm);
-				let sentences = lineText.matchAll(wholeSentenceRegex);
+				let paragraphText = editor.getLine(cursorPosition.line);
+				//let sentences = paragraphText.matchAll(/[.?!] /gm);
+				let sentences = paragraphText.matchAll(wholeSentenceRegex);
 				for(const sentence of sentences) {
 					if (sentence.index-2<cursorPosition.ch && cursorPosition.ch <sentence.index+sentence[0].length){
 						editor.setSelection({line:cursorPosition.line,ch:sentence.index-1},{line:cursorPosition.line,ch:sentence.index+sentence[0].length});
@@ -133,6 +133,9 @@ export default class MyPlugin extends Plugin {
 				}	
 			}
 		})
+
+//		const boolean isStartOfParagraph=false;
+//		if ()
 
     this.addSettingTab(new SampleSettingTab(this.app, this));
 
