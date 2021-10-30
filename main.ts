@@ -31,18 +31,15 @@ export default class MyPlugin extends Plugin {
 			editorCallback: (editor: Editor) => {
 				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
 				const cursorPosition = editor.getCursor();
-				console.log("This is the cursor position", cursorPosition)
 				let paragraphText = editor.getLine(cursorPosition.line);
-				//let sentences = paragraphText.matchAll(/[.?!] /gm);
-				let sentences = paragraphText.matchAll(wholeSentenceRegex);
+				const sentences = paragraphText.matchAll(wholeSentenceRegex);
 				for(const sentence of sentences) {
 					if ( cursorPosition.ch >=sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
 						let cursorPositionInSentence = cursorPosition.ch-sentence.index;
-						let cutportion=sentence[0].substring(0,cursorPositionInSentence);
-						let newpar=paragraphText.replace(cutportion," ");
-						editor.setLine(cursorPosition.line,newpar);
-						editor.setCursor({line:cursorPosition.line,ch:cursorPosition.ch-cutportion.length});
-						// editor.setCursor(sentence.index);
+						let cutPortion=sentence[0].substring(0,cursorPositionInSentence);
+						let newPar=paragraphText.replace(cutPortion," ");
+						editor.setLine(cursorPosition.line,newPar);
+						editor.setCursor({line:cursorPosition.line,ch:cursorPosition.ch-cutPortion.length});
 					}
 				}
 			}
@@ -62,10 +59,10 @@ export default class MyPlugin extends Plugin {
 				for(const sentence of sentences) {
 					if ( cursorPosition.ch >=sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
 						let cursorPositionInSentence = cursorPosition.ch-sentence.index;
-						let cutportion=sentence[0].substring(cursorPositionInSentence);
-						console.log(cutportion);
-						let newpar=paragraphText.replace(cutportion,"");
-						editor.setLine(cursorPosition.line,newpar);
+						let cutPortion=sentence[0].substring(cursorPositionInSentence);
+						console.log(cutPortion);
+						let newPar=paragraphText.replace(cutPortion,"");
+						editor.setLine(cursorPosition.line,newPar);
 						editor.setCursor({line:cursorPosition.line,ch:cursorPosition.ch});
 						// editor.setCursor(sentence.index);
 					}
