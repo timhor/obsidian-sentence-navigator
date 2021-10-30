@@ -79,16 +79,23 @@ export default class MyPlugin extends Plugin {
 			hotkeys: [{ modifiers: ["Alt"], key:"Left"}],
 			editorCallback: (editor: Editor) => {
 				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
-				const cursorPosition = editor.getCursor();
-				console.log("This is the cursor position", cursorPosition)
+				let cursorPosition = editor.getCursor();
 				let paragraphText = editor.getLine(cursorPosition.line);
-				//let sentences = paragraphText.matchAll(/[.?!] /gm);
-				let sentences = paragraphText.matchAll(wholeSentenceRegex);
-				for(const sentence of sentences) {
-					if ( cursorPosition.ch >=sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
-						editor.setCursor({line:cursorPosition.line,ch:sentence.index-2});
-						// editor.setCursor(sentence.index);
+//				console.log("This is the cursor position", cursorPosition)
+				if (cursorPosition.ch==0){
+					let previousParText=editor.getLine(cursorPosition.line-1);
+//					console.log(previousParText);
+					editor.setCursor({line:cursorPosition.line-1,ch:previousParText.length-1});
+				}
+				else {
+					const sentences = paragraphText.matchAll(wholeSentenceRegex);
+					for(const sentence of sentences) {
+						if ( cursorPosition.ch >=sentence.index && sentence.index+sentence[0].length >= cursorPosition.ch){
+							//console.log(` Cursor is at char ${cursorPosition.ch} on a line of length ${editor.getLine(cursorPosition.line).length}`);
+							editor.setCursor({line:cursorPosition.line,ch:sentence.index-2});
+						}
 					}
+					// editor.setCursor(sentence.index);
 				}
 			}
 		});
@@ -99,17 +106,20 @@ export default class MyPlugin extends Plugin {
 			hotkeys: [{ modifiers: ["Mod"], key:"Right"}],
 			editorCallback: (editor: Editor) => {
 				const wholeSentenceRegex = (/(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm);
-				const cursorPosition = editor.getCursor();
-				console.log("This is the cursor position", cursorPosition)
+				let cursorPosition = editor.getCursor();
+			//	console.log("This is the cursor position", cursorPosition)
 				let paragraphText = editor.getLine(cursorPosition.line);
-				//let sentences = paragraphText.matchAll(/[.?!] /gm);
-				let sentences = paragraphText.matchAll(wholeSentenceRegex);
-				for(const sentence of sentences) {
-					if (cursorPosition.ch>= sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
-						console.log(`cursor position before move: char is ${cursorPosition.ch} \non line (paragraph): ${cursorPosition.line} \nsentence index is ${sentence.index}\n sentence is ${sentence[0].length} chars long`);
-						editor.setCursor({line:cursorPosition.line,ch:sentence.index+sentence[0].length+1});
-						console.log(`cursor position after move: char is ${cursorPosition.ch}\non line (paragraph): ${cursorPosition.line} \nsentence index is ${sentence.index}\n sentence is ${sentence[0].length} chars long`);
-						// editor.setCursor(sentence.index);
+				console.log(`Cursor position is ${cursorPosition.ch} ; pargraph length is ${paragraphText.length}`)
+				if (cursorPosition.ch==paragraphText.length){
+					editor.setCursor({line:cursorPosition.line + 1,ch:0})
+				}
+				else {
+					const sentences = paragraphText.matchAll(wholeSentenceRegex);
+					for(const sentence of sentences) {
+						if (cursorPosition.ch>= sentence.index && cursorPosition.ch <sentence.index+sentence[0].length){
+					//		console.log(`cursor position before move: char is ${cursorPosition.ch} \non line (paragraph): ${cursorPosition.line} \nsentence index is ${sentence.index}\n sentence is ${sentence[0].length} chars long`);
+							editor.setCursor({line:cursorPosition.line,ch:sentence.index+sentence[0].length+1});
+						}
 					}
 				}
 			}
