@@ -1,4 +1,5 @@
 import { Plugin, Editor } from 'obsidian';
+import { WHOLE_SENTENCE } from './constants';
 
 export default class SentenceNavigator extends Plugin {
   onload() {
@@ -7,11 +8,9 @@ export default class SentenceNavigator extends Plugin {
       name: 'Delete to beginning of sentence',
       hotkeys: [{ modifiers: ['Mod', 'Shift'], key: 'Backspace' }],
       editorCallback: (editor: Editor) => {
-        const wholeSentenceRegex =
-          /(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm;
         const cursorPosition = editor.getCursor();
         let paragraphText = editor.getLine(cursorPosition.line);
-        const sentences = paragraphText.matchAll(wholeSentenceRegex);
+        const sentences = paragraphText.matchAll(WHOLE_SENTENCE);
         for (const sentence of sentences) {
           if (
             cursorPosition.ch >= sentence.index &&
@@ -35,11 +34,9 @@ export default class SentenceNavigator extends Plugin {
       name: 'Delete to end of sentence',
       hotkeys: [{ modifiers: ['Mod', 'Shift'], key: 'Delete' }],
       editorCallback: (editor: Editor) => {
-        const wholeSentenceRegex =
-          /(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm;
         const cursorPosition = editor.getCursor();
         let paragraphText = editor.getLine(cursorPosition.line);
-        let sentences = paragraphText.matchAll(wholeSentenceRegex);
+        let sentences = paragraphText.matchAll(WHOLE_SENTENCE);
         for (const sentence of sentences) {
           if (
             cursorPosition.ch >= sentence.index &&
@@ -63,8 +60,6 @@ export default class SentenceNavigator extends Plugin {
       name: 'Move to beginning of sentence',
       hotkeys: [{ modifiers: ['Alt'], key: 'Left' }],
       editorCallback: (editor: Editor) => {
-        const wholeSentenceRegex =
-          /(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm;
         let cursorPosition = editor.getCursor();
         let paragraphText = editor.getLine(cursorPosition.line);
         if (cursorPosition.ch == 0) {
@@ -74,7 +69,7 @@ export default class SentenceNavigator extends Plugin {
             ch: previousParText.length - 1,
           });
         } else {
-          const sentences = paragraphText.matchAll(wholeSentenceRegex);
+          const sentences = paragraphText.matchAll(WHOLE_SENTENCE);
           for (const sentence of sentences) {
             if (
               cursorPosition.ch >= sentence.index &&
@@ -95,14 +90,12 @@ export default class SentenceNavigator extends Plugin {
       name: 'Move to start of next sentence',
       hotkeys: [{ modifiers: ['Mod'], key: 'Right' }],
       editorCallback: (editor: Editor) => {
-        const wholeSentenceRegex =
-          /(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm;
         let cursorPosition = editor.getCursor();
         let paragraphText = editor.getLine(cursorPosition.line);
         if (cursorPosition.ch == paragraphText.length) {
           editor.setCursor({ line: cursorPosition.line + 1, ch: 0 });
         } else {
-          const sentences = paragraphText.matchAll(wholeSentenceRegex);
+          const sentences = paragraphText.matchAll(WHOLE_SENTENCE);
           for (const sentence of sentences) {
             if (
               cursorPosition.ch >= sentence.index &&
@@ -122,11 +115,9 @@ export default class SentenceNavigator extends Plugin {
       id: 'Select Sentence',
       name: 'select-sentence',
       editorCallback: (editor: Editor) => {
-        const wholeSentenceRegex =
-          /(==(.*?)==)|[^.!?\s][^.!?]*(?:[.!?](?!['"]?\s|$)[^.!?]*)*[.!?]?['"]?(?=\s|$)/gm;
         const cursorPosition = editor.getCursor();
         let paragraphText = editor.getLine(cursorPosition.line);
-        let sentences = paragraphText.matchAll(wholeSentenceRegex);
+        let sentences = paragraphText.matchAll(WHOLE_SENTENCE);
         for (const sentence of sentences) {
           if (
             sentence.index - 2 < cursorPosition.ch &&
