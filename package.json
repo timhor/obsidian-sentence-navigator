@@ -4,8 +4,8 @@
   "description": "Manipulate sentences as a unit of movement. Select, move and delete by whole sentences.",
   "main": "main.js",
   "scripts": {
-    "dev": "esbuild main.ts --bundle --external:obsidian --outdir=.  --target=es2016 --format=cjs --sourcemap=inline --watch",
-    "build": "esbuild main.ts --bundle --external:obsidian --outdir=.  --target=es2016 --format=cjs"
+    "start": "esbuild main.ts --bundle --external:obsidian --outdir=.  --target=es2019 --format=cjs --sourcemap=inline --watch",
+    "build": "esbuild main.ts --bundle --external:obsidian --outdir=.  --target=es2019 --format=cjs"
   },
   "keywords": [],
   "author": "Andrew Brown, Tim Hor",
