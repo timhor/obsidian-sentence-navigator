@@ -25,14 +25,12 @@ export default class SentenceNavigator extends Plugin {
     this.addCommand({
       id: 'Move-backwards-sentence',
       name: 'Move to beginning of sentence',
-      hotkeys: [{ modifiers: ['Alt'], key: 'Left' }],
       editorCallback: (editor: Editor) => moveToStartOfCurrentSentence(editor),
     });
 
     this.addCommand({
       id: 'Move-forwards-sentence',
       name: 'Move to start of next sentence',
-      hotkeys: [{ modifiers: ['Mod'], key: 'Right' }],
       editorCallback: (editor: Editor) => moveToStartOfNextSentence(editor),
     });
 
