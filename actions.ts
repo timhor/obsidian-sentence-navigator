@@ -7,7 +7,7 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
   forEachSentence(paragraphText, (sentence) => {
     if (
       cursorPosition.ch >= sentence.index &&
-      cursorPosition.ch < sentence.index + sentence[0].length
+      cursorPosition.ch <= sentence.index + sentence[0].length
     ) {
       const cursorPositionInSentence = cursorPosition.ch - sentence.index;
       if (boundary === 'start') {
