@@ -1,11 +1,10 @@
 import { Editor } from 'obsidian';
-import { WHOLE_SENTENCE } from './constants';
+import { forEachSentence } from './utils';
 
 export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
   const cursorPosition = editor.getCursor();
   const paragraphText = editor.getLine(cursorPosition.line);
-  const sentences = paragraphText.matchAll(WHOLE_SENTENCE);
-  for (const sentence of sentences) {
+  forEachSentence(paragraphText, (sentence) => {
     if (
       cursorPosition.ch >= sentence.index &&
       cursorPosition.ch < sentence.index + sentence[0].length
@@ -29,21 +28,20 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
         });
       }
     }
-  }
+  });
 };
 
 export const moveToStartOfCurrentSentence = (editor: Editor) => {
   const cursorPosition = editor.getCursor();
   const paragraphText = editor.getLine(cursorPosition.line);
   if (cursorPosition.ch === 0) {
-    const previousParText = editor.getLine(cursorPosition.line - 1);
+    const previousParagraphText = editor.getLine(cursorPosition.line - 1);
     editor.setCursor({
       line: cursorPosition.line - 1,
-      ch: previousParText.length - 1,
+      ch: previousParagraphText.length - 1,
     });
   } else {
-    const sentences = paragraphText.matchAll(WHOLE_SENTENCE);
-    for (const sentence of sentences) {
+    forEachSentence(paragraphText, (sentence) => {
       if (
         cursorPosition.ch >= sentence.index &&
         sentence.index + sentence[0].length >= cursorPosition.ch
@@ -53,7 +51,7 @@ export const moveToStartOfCurrentSentence = (editor: Editor) => {
           ch: sentence.index - 2,
         });
       }
-    }
+    });
   }
 };
 
@@ -63,8 +61,7 @@ export const moveToStartOfNextSentence = (editor: Editor) => {
   if (cursorPosition.ch === paragraphText.length) {
     editor.setCursor({ line: cursorPosition.line + 1, ch: 0 });
   } else {
-    const sentences = paragraphText.matchAll(WHOLE_SENTENCE);
-    for (const sentence of sentences) {
+    forEachSentence(paragraphText, (sentence) => {
       if (
         cursorPosition.ch >= sentence.index &&
         cursorPosition.ch < sentence.index + sentence[0].length
@@ -74,15 +71,14 @@ export const moveToStartOfNextSentence = (editor: Editor) => {
           ch: sentence.index + sentence[0].length + 1,
         });
       }
-    }
+    });
   }
 };
 
 export const selectSentence = (editor: Editor) => {
   const cursorPosition = editor.getCursor();
   const paragraphText = editor.getLine(cursorPosition.line);
-  const sentences = paragraphText.matchAll(WHOLE_SENTENCE);
-  for (const sentence of sentences) {
+  forEachSentence(paragraphText, (sentence) => {
     if (
       sentence.index - 2 < cursorPosition.ch &&
       cursorPosition.ch < sentence.index + sentence[0].length
@@ -95,5 +91,5 @@ export const selectSentence = (editor: Editor) => {
         },
       );
     }
-  }
+  });
 };
