@@ -18,6 +18,21 @@ export const setCursorAtStartOfLine = (editor: Editor, line: number) => {
   });
 };
 
+export const setCursorAtEndOfLine = (editor: Editor, line: number) => {
+  editor.setCursor({
+    line,
+    ch: editor.getLine(line).length,
+  });
+};
+
+export const getPrevNonEmptyLine = (editor: Editor, currentLine: number) => {
+  let prevLine = currentLine - 1;
+  while (prevLine > 0 && editor.getLine(prevLine).length === 0) {
+    prevLine--;
+  }
+  return prevLine;
+};
+
 export const getNextNonEmptyLine = (editor: Editor, currentLine: number) => {
   let nextLine = currentLine + 1;
   while (
