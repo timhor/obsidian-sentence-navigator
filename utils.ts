@@ -1,6 +1,14 @@
 import { Editor } from 'obsidian';
 import { WHOLE_SENTENCE } from './constants';
 
+export const getCursorAndParagraphText = (editor: Editor) => {
+  const cursorPosition = editor.getCursor();
+  return {
+    cursorPosition,
+    paragraphText: editor.getLine(cursorPosition.line),
+  };
+};
+
 export const forEachSentence = (
   paragraphText: string,
   callback: (sentence: RegExpMatchArray) => void,

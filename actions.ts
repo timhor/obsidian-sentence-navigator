@@ -1,5 +1,6 @@
 import { Editor } from 'obsidian';
 import {
+  getCursorAndParagraphText,
   forEachSentence,
   setCursorAtStartOfLine,
   setCursorAtEndOfLine,
@@ -8,8 +9,7 @@ import {
 } from './utils';
 
 export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
-  const cursorPosition = editor.getCursor();
-  const paragraphText = editor.getLine(cursorPosition.line);
+  const { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
   forEachSentence(paragraphText, (sentence) => {
     if (
       cursorPosition.ch >= sentence.index &&
@@ -38,16 +38,14 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
 };
 
 export const moveToStartOfCurrentSentence = (editor: Editor) => {
-  let cursorPosition = editor.getCursor();
-  let paragraphText = editor.getLine(cursorPosition.line);
+  let { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
   if (cursorPosition.ch === 0) {
     setCursorAtEndOfLine(
       editor,
       getPrevNonEmptyLine(editor, cursorPosition.line),
     );
   }
-  cursorPosition = editor.getCursor();
-  paragraphText = editor.getLine(cursorPosition.line);
+  ({ cursorPosition, paragraphText } = getCursorAndParagraphText(editor));
   forEachSentence(paragraphText, (sentence) => {
     if (
       cursorPosition.ch >= sentence.index &&
@@ -69,8 +67,7 @@ export const moveToStartOfCurrentSentence = (editor: Editor) => {
 };
 
 export const moveToStartOfNextSentence = (editor: Editor) => {
-  const cursorPosition = editor.getCursor();
-  const paragraphText = editor.getLine(cursorPosition.line);
+  const { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
   if (cursorPosition.ch === paragraphText.length) {
     // if starting from an empty line
     setCursorAtStartOfLine(
@@ -100,8 +97,7 @@ export const moveToStartOfNextSentence = (editor: Editor) => {
 };
 
 export const selectSentence = (editor: Editor) => {
-  const cursorPosition = editor.getCursor();
-  const paragraphText = editor.getLine(cursorPosition.line);
+  const { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
   let found = false;
   forEachSentence(paragraphText, (sentence) => {
     if (!found && cursorPosition.ch <= sentence.index + sentence[0].length) {
