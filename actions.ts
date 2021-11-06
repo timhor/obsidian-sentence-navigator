@@ -1,5 +1,9 @@
 import { Editor } from 'obsidian';
-import { forEachSentence } from './utils';
+import {
+  forEachSentence,
+  setCursorAtStartOfLine,
+  getNextNonEmptyLine,
+} from './utils';
 
 export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
   const cursorPosition = editor.getCursor();
@@ -59,17 +63,28 @@ export const moveToStartOfNextSentence = (editor: Editor) => {
   const cursorPosition = editor.getCursor();
   const paragraphText = editor.getLine(cursorPosition.line);
   if (cursorPosition.ch === paragraphText.length) {
-    editor.setCursor({ line: cursorPosition.line + 1, ch: 0 });
+    // if starting from an empty line
+    setCursorAtStartOfLine(
+      editor,
+      getNextNonEmptyLine(editor, cursorPosition.line),
+    );
   } else {
     forEachSentence(paragraphText, (sentence) => {
       if (
         cursorPosition.ch >= sentence.index &&
         cursorPosition.ch < sentence.index + sentence[0].length
       ) {
+        const newPosition = sentence.index + sentence[0].length + 1; // including space
         editor.setCursor({
           line: cursorPosition.line,
-          ch: sentence.index + sentence[0].length + 1,
+          ch: newPosition,
         });
+        if (newPosition >= paragraphText.length) {
+          setCursorAtStartOfLine(
+            editor,
+            getNextNonEmptyLine(editor, cursorPosition.line),
+          );
+        }
       }
     });
   }
@@ -85,7 +100,7 @@ export const selectSentence = (editor: Editor) => {
         { line: cursorPosition.line, ch: sentence.index },
         {
           line: cursorPosition.line,
-          ch: sentence.index + sentence[0].length + 1,
+          ch: sentence.index + sentence[0].length + 1, // including space
         },
       );
       found = true;
