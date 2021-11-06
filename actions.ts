@@ -78,11 +78,9 @@ export const moveToStartOfNextSentence = (editor: Editor) => {
 export const selectSentence = (editor: Editor) => {
   const cursorPosition = editor.getCursor();
   const paragraphText = editor.getLine(cursorPosition.line);
+  let found = false;
   forEachSentence(paragraphText, (sentence) => {
-    if (
-      sentence.index - 2 < cursorPosition.ch &&
-      cursorPosition.ch < sentence.index + sentence[0].length
-    ) {
+    if (!found && cursorPosition.ch <= sentence.index + sentence[0].length) {
       editor.setSelection(
         { line: cursorPosition.line, ch: sentence.index },
         {
@@ -90,6 +88,7 @@ export const selectSentence = (editor: Editor) => {
           ch: sentence.index + sentence[0].length + 1,
         },
       );
+      found = true;
     }
   });
 };
