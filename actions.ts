@@ -48,7 +48,7 @@ export const moveToStartOfCurrentSentence = (editor: Editor) => {
       ) {
         editor.setCursor({
           line: cursorPosition.line,
-          ch: sentence.index - 2,
+          ch: sentence.index,
         });
       }
     });
