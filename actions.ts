@@ -10,8 +10,10 @@ import {
 
 export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
   const { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
+  let done = false;
   forEachSentence(paragraphText, (sentence) => {
     if (
+      !done &&
       cursorPosition.ch >= sentence.index &&
       cursorPosition.ch <= sentence.index + sentence[0].length
     ) {
@@ -33,6 +35,7 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
           ch: cursorPosition.ch,
         });
       }
+      done = true;
     }
   });
 };
