@@ -39,28 +39,36 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
 
 export const moveToStartOfCurrentSentence = (editor: Editor) => {
   let { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
+
   if (cursorPosition.ch === 0) {
+    // if cursor is already at the start of this paragraph, move to the previous paragraph
     setCursorAtEndOfLine(
       editor,
       getPrevNonEmptyLine(editor, cursorPosition.line),
     );
   }
   ({ cursorPosition, paragraphText } = getCursorAndParagraphText(editor));
+
   forEachSentence(paragraphText, (sentence) => {
-    if(
-      cursorPosition.ch === sentence.index
+    const startOfSentence = sentence.index;
+
+    // handle any spaces behind the cursor
+    while (
+      cursorPosition.ch > 0 &&
+      paragraphText.charAt(cursorPosition.ch - 1) === ' '
     ) {
       editor.setCursor({
         line: cursorPosition.line,
-        ch: cursorPosition.ch-2
-      })
-      moveToStartOfCurrentSentence(editor)
+        ch: cursorPosition.ch - 1,
+      });
+      ({ cursorPosition, paragraphText } = getCursorAndParagraphText(editor));
     }
+
     if (
-      cursorPosition.ch > sentence.index &&
-      sentence.index + sentence[0].length >= cursorPosition.ch
+      cursorPosition.ch > startOfSentence &&
+      startOfSentence + sentence[0].length >= cursorPosition.ch
     ) {
-      const newPosition = sentence.index;
+      const newPosition = startOfSentence;
       editor.setCursor({
         line: cursorPosition.line,
         ch: newPosition,
