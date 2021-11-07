@@ -1,6 +1,6 @@
 {
   "name": "obsidian-sentence-wizard",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Manipulate sentences as a unit of movement. Select, move and delete by whole sentences.",
   "main": "main.js",
   "scripts": {

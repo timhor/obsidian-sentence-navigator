@@ -47,8 +47,17 @@ export const moveToStartOfCurrentSentence = (editor: Editor) => {
   }
   ({ cursorPosition, paragraphText } = getCursorAndParagraphText(editor));
   forEachSentence(paragraphText, (sentence) => {
+    if(
+      cursorPosition.ch === sentence.index
+    ) {
+      editor.setCursor({
+        line: cursorPosition.line,
+        ch: cursorPosition.ch-2
+      })
+      moveToStartOfCurrentSentence(editor)
+    }
     if (
-      cursorPosition.ch >= sentence.index &&
+      cursorPosition.ch > sentence.index &&
       sentence.index + sentence[0].length >= cursorPosition.ch
     ) {
       const newPosition = sentence.index;
