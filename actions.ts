@@ -84,20 +84,35 @@ export const moveToStartOfCurrentSentence = (editor: Editor) => {
 };
 
 export const moveToStartOfNextSentence = (editor: Editor) => {
-  const { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
+  let { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
   if (cursorPosition.ch === paragraphText.length) {
-    // if starting from an empty line
+    // if cursor is already at the end of this paragraph, move to the next paragraph
     setCursorAtStartOfLine(
       editor,
       getNextNonEmptyLine(editor, cursorPosition.line),
     );
   } else {
     forEachSentence(paragraphText, (sentence) => {
-      if (
-        cursorPosition.ch >= sentence.index &&
-        cursorPosition.ch < sentence.index + sentence[0].length
+      const startOfSentence = sentence.index;
+      const endOfSentence = startOfSentence + sentence[0].length;
+
+      // handle any spaces in front of the cursor
+      while (
+        cursorPosition.ch < paragraphText.length &&
+        paragraphText.charAt(cursorPosition.ch) === ' '
       ) {
-        const newPosition = sentence.index + sentence[0].length + 1; // including space
+        editor.setCursor({
+          line: cursorPosition.line,
+          ch: cursorPosition.ch + 1,
+        });
+        ({ cursorPosition, paragraphText } = getCursorAndParagraphText(editor));
+      }
+
+      if (
+        cursorPosition.ch >= startOfSentence &&
+        cursorPosition.ch < endOfSentence
+      ) {
+        const newPosition = endOfSentence + 1; // including space
         editor.setCursor({
           line: cursorPosition.line,
           ch: newPosition,
