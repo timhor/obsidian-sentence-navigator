@@ -132,7 +132,7 @@ export const moveToStartOfNextSentence = (editor: Editor) => {
 
       if (
         cursorPosition.ch >= startOfSentence &&
-        cursorPosition.ch < endOfSentence
+        cursorPosition.ch <= endOfSentence
       ) {
         const newPosition = endOfSentence + 1; // including space
         editor.setCursor({
