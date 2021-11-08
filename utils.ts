@@ -1,4 +1,4 @@
-import { Editor } from 'obsidian';
+import { Editor, EditorPosition } from 'obsidian';
 import { WHOLE_SENTENCE } from './constants';
 
 export const getCursorAndParagraphText = (editor: Editor) => {
@@ -30,6 +30,33 @@ export const setCursorAtEndOfLine = (editor: Editor, line: number) => {
   editor.setCursor({
     line,
     ch: editor.getLine(line).length,
+  });
+};
+
+export const setCursorAtNextWordCharacter = ({
+  editor,
+  cursorPosition,
+  paragraphText,
+  direction,
+}: {
+  editor: Editor;
+  cursorPosition: EditorPosition;
+  paragraphText: string;
+  direction: 'start' | 'end';
+}) => {
+  let ch = cursorPosition.ch;
+  if (direction === 'start') {
+    while (ch > 0 && paragraphText.charAt(ch - 1) === ' ') {
+      ch--;
+    }
+  } else {
+    while (ch < paragraphText.length && paragraphText.charAt(ch) === ' ') {
+      ch++;
+    }
+  }
+  editor.setCursor({
+    ch,
+    line: cursorPosition.line,
   });
 };
 

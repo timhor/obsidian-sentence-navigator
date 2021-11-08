@@ -4,12 +4,29 @@ import {
   forEachSentence,
   setCursorAtStartOfLine,
   setCursorAtEndOfLine,
+  setCursorAtNextWordCharacter,
   getPrevNonEmptyLine,
   getNextNonEmptyLine,
 } from './utils';
 
 export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
-  const { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
+  let { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
+
+  // move cursor to next position that is not a space, to handle leading and
+  // trailing space characters that might be in the path of deletion
+  if (
+    paragraphText.charAt(cursorPosition.ch) === ' ' ||
+    paragraphText.charAt(cursorPosition.ch - 1) === ' '
+  ) {
+    setCursorAtNextWordCharacter({
+      editor,
+      cursorPosition,
+      paragraphText,
+      direction: boundary,
+    });
+    ({ cursorPosition, paragraphText } = getCursorAndParagraphText(editor));
+  }
+
   let done = false;
   forEachSentence(paragraphText, (sentence) => {
     if (
