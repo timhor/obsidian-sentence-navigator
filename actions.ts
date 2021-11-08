@@ -14,6 +14,7 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
 
   // move cursor to next position that is not a space, to handle leading and
   // trailing space characters that might be in the path of deletion
+  const originalCursorPosition = cursorPosition;
   if (
     paragraphText.charAt(cursorPosition.ch) === ' ' ||
     paragraphText.charAt(cursorPosition.ch - 1) === ' '
@@ -34,23 +35,24 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
       cursorPosition.ch >= sentence.index &&
       cursorPosition.ch <= sentence.index + sentence[0].length
     ) {
-      const cursorPositionInSentence = cursorPosition.ch - sentence.index;
       if (boundary === 'start') {
-        const cutPortion = sentence[0].substring(0, cursorPositionInSentence);
-        const newParagraph = paragraphText.replace(cutPortion, '');
+        const newParagraph =
+          paragraphText.substring(0, sentence.index) +
+          paragraphText.substring(cursorPosition.ch);
+        const cutPortionLength = paragraphText.length - newParagraph.length;
         editor.setLine(cursorPosition.line, newParagraph);
         editor.setCursor({
           line: cursorPosition.line,
-          ch: cursorPosition.ch - cutPortion.length,
+          ch: originalCursorPosition.ch - cutPortionLength,
         });
       } else {
-        const cutPortion = sentence[0].substring(cursorPositionInSentence);
-        const newParagraph = paragraphText.replace(cutPortion, '');
+        const remainingSentenceLength =
+          sentence.index + sentence[0].length - cursorPosition.ch;
+        const newParagraph =
+          paragraphText.substring(0, cursorPosition.ch) +
+          paragraphText.substring(cursorPosition.ch + remainingSentenceLength);
         editor.setLine(cursorPosition.line, newParagraph);
-        editor.setCursor({
-          line: cursorPosition.line,
-          ch: cursorPosition.ch,
-        });
+        editor.setCursor(originalCursorPosition);
       }
       done = true;
     }
