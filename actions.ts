@@ -134,12 +134,17 @@ export const moveToStartOfNextSentence = (editor: Editor) => {
         cursorPosition.ch >= startOfSentence &&
         cursorPosition.ch <= endOfSentence
       ) {
-        const newPosition = endOfSentence + 1; // including space
-        editor.setCursor({
+        const newPosition = {
           line: cursorPosition.line,
-          ch: newPosition,
+          ch: endOfSentence,
+        };
+        setCursorAtNextWordCharacter({
+          editor,
+          cursorPosition: newPosition,
+          paragraphText,
+          direction: 'end',
         });
-        if (newPosition >= paragraphText.length) {
+        if (endOfSentence >= paragraphText.length) {
           setCursorAtStartOfLine(
             editor,
             getNextNonEmptyLine(editor, cursorPosition.line),
