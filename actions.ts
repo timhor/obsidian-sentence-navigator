@@ -38,7 +38,7 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
       if (boundary === 'start') {
         const newParagraph =
           paragraphText.substring(0, sentence.index) +
-          paragraphText.substring(cursorPosition.ch);
+          paragraphText.substring(originalCursorPosition.ch);
         const cutPortionLength = paragraphText.length - newParagraph.length;
         editor.setLine(cursorPosition.line, newParagraph);
         editor.setCursor({
@@ -49,7 +49,7 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
         const remainingSentenceLength =
           sentence.index + sentence[0].length - cursorPosition.ch;
         const newParagraph =
-          paragraphText.substring(0, cursorPosition.ch) +
+          paragraphText.substring(0, originalCursorPosition.ch) +
           paragraphText.substring(cursorPosition.ch + remainingSentenceLength);
         editor.setLine(cursorPosition.line, newParagraph);
         editor.setCursor(originalCursorPosition);
