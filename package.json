@@ -1,6 +1,6 @@
 {
   "name": "obsidian-sentence-wizard",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Manipulate sentences as a unit of movement. Select, move and delete by whole sentences.",
   "main": "main.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "build": "esbuild main.ts --bundle --external:obsidian --outdir=.  --target=es2019 --format=cjs"
   },
   "keywords": [],
-  "author": "Andrew Brown, Tim Hor",
+  "author": "Andrew Brown & Tim Hor",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^16.11.1",
