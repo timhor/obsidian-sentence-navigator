@@ -31,3 +31,4 @@ To get started:
 - Switch to the specified Node version: `nvm use`
 - Install dependencies: `yarn install`
 - Run the extension: `yarn start`
+- Run tests: `yarn test` (use `--watch` for watch mode)
