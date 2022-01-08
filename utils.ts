@@ -1,6 +1,17 @@
 import { Editor, EditorPosition } from 'obsidian';
 import { WHOLE_SENTENCE } from './constants';
 
+export const getLineBoundaries = (editor: Editor, line: number) => ({
+  start: {
+    line,
+    ch: 0,
+  },
+  end: {
+    line,
+    ch: editor.getLine(line).length,
+  },
+});
+
 export const getCursorAndParagraphText = (editor: Editor) => {
   const cursorPosition = editor.getCursor();
   return {

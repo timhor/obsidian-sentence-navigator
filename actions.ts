@@ -1,5 +1,6 @@
 import { Editor } from 'obsidian';
 import {
+  getLineBoundaries,
   getCursorAndParagraphText,
   forEachSentence,
   setCursorAtStartOfLine,
@@ -40,7 +41,8 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
           paragraphText.substring(0, sentence.index) +
           paragraphText.substring(originalCursorPosition.ch);
         const cutPortionLength = paragraphText.length - newParagraph.length;
-        editor.setLine(cursorPosition.line, newParagraph);
+        const { start, end } = getLineBoundaries(editor, cursorPosition.line);
+        editor.replaceRange(newParagraph, start, end);
         editor.setCursor({
           line: cursorPosition.line,
           ch: originalCursorPosition.ch - cutPortionLength,
@@ -51,7 +53,8 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
         const newParagraph =
           paragraphText.substring(0, originalCursorPosition.ch) +
           paragraphText.substring(cursorPosition.ch + remainingSentenceLength);
-        editor.setLine(cursorPosition.line, newParagraph);
+        const { start, end } = getLineBoundaries(editor, cursorPosition.line);
+        editor.replaceRange(newParagraph, start, end);
         editor.setCursor(originalCursorPosition);
       }
       done = true;

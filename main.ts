@@ -4,7 +4,7 @@ import {
   moveToStartOfCurrentSentence,
   moveToStartOfNextSentence,
   selectSentence,
-} from 'actions';
+} from './actions';
 
 export default class SentenceNavigator extends Plugin {
   onload() {
