@@ -6,6 +6,7 @@
   "scripts": {
     "start": "esbuild main.ts --bundle --external:obsidian --outdir=.  --target=es2019 --format=cjs --sourcemap=inline --watch",
     "build": "esbuild main.ts --bundle --external:obsidian --outdir=.  --target=es2019 --format=cjs",
+    "lint": "eslint .",
     "test": "jest",
     "prepare": "husky install"
   },
@@ -17,9 +18,12 @@
     "@babel/preset-typescript": "^7.16.7",
     "@types/jest": "^27.4.0",
     "@types/node": "^16.11.1",
+    "@typescript-eslint/eslint-plugin": "^5.9.0",
+    "@typescript-eslint/parser": "^5.9.0",
     "babel-jest": "^27.4.5",
     "codemirror": "^5.65.0",
     "esbuild": "0.13.8",
+    "eslint": "^8.6.0",
     "husky": "^7.0.2",
     "jest": "^27.4.5",
     "lint-staged": "^11.1.2",
@@ -29,6 +33,11 @@
     "typescript": "^4.4.4"
   },
   "lint-staged": {
-    "*.{ts,tsx,html,css,md,json}": "prettier --write"
+    "**/*.{ts,tsx,html,css,md,json}": [
+      "prettier --write"
+    ],
+    "**/*.{ts,tsx,html,css}": [
+      "eslint --fix"
+    ]
   }
 }

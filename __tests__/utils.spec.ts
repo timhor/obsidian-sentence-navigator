@@ -31,7 +31,7 @@ describe('Sentence Navigator: utils', () => {
     "This is a sentence. Here's another one!  This is a different and " +
     'longer sentence with several other words in it?';
   const originalLine2 = '\n\n\nContinuing on a **SEPARATE** paragraph now';
-  let originalDoc = originalLine1 + originalLine2;
+  const originalDoc = originalLine1 + originalLine2;
 
   beforeAll(() => {
     editor = CodeMirror(document.body);
