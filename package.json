@@ -4,9 +4,9 @@
   "description": "Manipulate sentences as a unit of movement. Select, move and delete by whole sentences.",
   "main": "main.js",
   "scripts": {
-    "start": "esbuild main.ts --bundle --external:obsidian --outdir=.  --target=es2019 --format=cjs --sourcemap=inline --watch",
-    "build": "esbuild main.ts --bundle --external:obsidian --outdir=.  --target=es2019 --format=cjs",
-    "lint": "eslint .",
+    "start": "esbuild src/main.ts --bundle --external:obsidian --outdir=.  --target=es2016 --format=cjs --sourcemap=inline --watch",
+    "build": "esbuild src/main.ts --bundle --external:obsidian --outdir=.  --target=es2016 --format=cjs",
+    "lint": "eslint src",
     "test": "jest",
     "prepare": "husky install"
   },
@@ -30,7 +30,7 @@
     "obsidian": "^0.12.17",
     "prettier": "^2.5.0",
     "tslib": "2.3.1",
-    "typescript": "^4.4.4"
+    "typescript": "4.4.4"
   },
   "lint-staged": {
     "**/*.{ts,tsx,html,css,md,json}": [
