@@ -1,6 +1,6 @@
 {
   "name": "obsidian-sentence-wizard",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "description": "Manipulate sentences as a unit of movement. Select, move and delete by whole sentences.",
   "main": "main.js",
   "scripts": {
@@ -11,7 +11,10 @@
     "prepare": "husky install"
   },
   "keywords": [],
-  "author": "Andrew Brown & Tim Hor",
+  "author": "Tim Hor",
+  "contributors": [
+    "Andrew Brown"
+  ],
   "license": "MIT",
   "devDependencies": {
     "@babel/preset-env": "^7.16.7",
