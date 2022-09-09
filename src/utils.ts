@@ -1,5 +1,5 @@
 import { Editor, EditorPosition } from 'obsidian';
-import { WHOLE_SENTENCE } from './constants';
+import { State } from './state';
 
 export const getLineBoundaries = (editor: Editor, line: number) => ({
   start: {
@@ -24,7 +24,7 @@ export const forEachSentence = (
   paragraphText: string,
   callback: (sentence: RegExpMatchArray) => void,
 ) => {
-  const sentences = paragraphText.matchAll(WHOLE_SENTENCE);
+  const sentences = paragraphText.matchAll(State.sentenceRegex);
   for (const sentence of sentences) {
     callback(sentence);
   }

@@ -7,6 +7,8 @@ import {
   moveToStartOfNextSentence,
   selectSentence,
 } from '../actions';
+import { State } from '../state';
+import { WHOLE_SENTENCE } from '../constants';
 
 // fixes jsdom type error - https://github.com/jsdom/jsdom/issues/3002#issuecomment-655748833
 document.createRange = () => {
@@ -32,6 +34,7 @@ describe('Sentence Navigator: actions', () => {
 
   beforeAll(() => {
     editor = CodeMirror(document.body);
+    State.sentenceRegex = WHOLE_SENTENCE;
   });
 
   beforeEach(() => {

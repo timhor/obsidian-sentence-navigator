@@ -5,9 +5,15 @@ import {
   moveToStartOfNextSentence,
   selectSentence,
 } from './actions';
+import { DEFAULT_SETTINGS, PluginSettings, SettingTab } from './settings';
+import { State } from './state';
 
 export default class SentenceNavigator extends Plugin {
-  onload() {
+  settings: PluginSettings;
+
+  async onload() {
+    await this.loadSettings();
+
     this.addCommand({
       id: 'backward-delete-sentence',
       name: 'Delete to beginning of sentence',
@@ -39,5 +45,21 @@ export default class SentenceNavigator extends Plugin {
       name: 'Select current sentence',
       editorCallback: (editor: Editor) => selectSentence(editor),
     });
+
+    this.addSettingTab(new SettingTab(this.app, this));
+  }
+
+  async loadSettings() {
+    const savedSettings = await this.loadData();
+    this.settings = {
+      ...DEFAULT_SETTINGS,
+      ...savedSettings,
+    };
+    State.sentenceRegex = new RegExp(this.settings.sentenceRegexSource, 'gm');
+  }
+
+  async saveSettings() {
+    await this.saveData(this.settings);
+    State.sentenceRegex = new RegExp(this.settings.sentenceRegexSource, 'gm');
   }
 }

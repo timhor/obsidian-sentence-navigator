@@ -10,6 +10,8 @@ import {
   getPrevNonEmptyLine,
   getNextNonEmptyLine,
 } from '../utils';
+import { State } from '../state';
+import { WHOLE_SENTENCE } from '../constants';
 
 // fixes jsdom type error - https://github.com/jsdom/jsdom/issues/3002#issuecomment-655748833
 document.createRange = () => {
@@ -35,6 +37,7 @@ describe('Sentence Navigator: utils', () => {
 
   beforeAll(() => {
     editor = CodeMirror(document.body);
+    State.sentenceRegex = WHOLE_SENTENCE;
   });
 
   beforeEach(() => {
