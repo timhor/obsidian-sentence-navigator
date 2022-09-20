@@ -167,7 +167,7 @@ export const selectSentence = (editor: Editor) => {
         { line: cursorPosition.line, ch: sentence.index },
         {
           line: cursorPosition.line,
-          ch: sentence.index + sentence[0].length + 1, // including space
+          ch: sentence.index + sentence[0].length,
         },
       );
       found = true;
