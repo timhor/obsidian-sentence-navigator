@@ -272,7 +272,7 @@ describe('Sentence Navigator: actions', () => {
         'when cursor is in the middle of a sentence',
         // preview: ...sentence. Here's an|other one...
         { line: 0, ch: 29 },
-        "Here's another one! ",
+        "Here's another one!",
       ],
       [
         'when cursor is between two sentences',
