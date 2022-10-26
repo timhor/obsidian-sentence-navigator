@@ -293,15 +293,37 @@ describe('Sentence Navigator: actions', () => {
       ],
     ])(
       'should select current sentence %s',
-      (_scenario, cursorPos, expectedCursorPos) => {
+      (_scenario, cursorPos, expectedSelection) => {
         editor.setCursor(cursorPos);
 
         selectSentence(editor as any);
 
         const { doc, selectedText } = getDocumentAndSelection(editor);
         expect(doc).toEqual(originalDoc);
-        expect(selectedText).toEqual(expectedCursorPos);
+        expect(selectedText).toEqual(expectedSelection);
       },
     );
+
+    it('should not select markdown bullet list characters', () => {
+      editor.setValue('- lorem ipsum');
+      editor.setCursor({ line: 0, ch: 0 });
+
+      selectSentence(editor as any);
+
+      const { doc, selectedText } = getDocumentAndSelection(editor);
+      expect(doc).toEqual('- lorem ipsum');
+      expect(selectedText).toEqual('lorem ipsum');
+    });
+
+    it('should not select markdown numbered list characters', () => {
+      editor.setValue('1. lorem ipsum');
+      editor.setCursor({ line: 0, ch: 0 });
+
+      selectSentence(editor as any);
+
+      const { doc, selectedText } = getDocumentAndSelection(editor);
+      expect(doc).toEqual('1. lorem ipsum');
+      expect(selectedText).toEqual('lorem ipsum');
+    });
   });
 });

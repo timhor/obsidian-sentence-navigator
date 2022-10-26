@@ -161,13 +161,26 @@ export const moveToStartOfNextSentence = (editor: Editor) => {
 export const selectSentence = (editor: Editor) => {
   const { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
   let found = false;
-  forEachSentence(paragraphText, (sentence) => {
-    if (!found && cursorPosition.ch <= sentence.index + sentence[0].length) {
+
+  // Ignore markdown list characters
+  let paragraphTextProcessed = paragraphText;
+  let offset = 0;
+  const matches = paragraphText.match(/^(\d+\.|[-*+]) /);
+  if (matches) {
+    offset = matches[0].length;
+    paragraphTextProcessed = paragraphText.slice(offset);
+  }
+
+  forEachSentence(paragraphTextProcessed, (sentence) => {
+    if (
+      !found &&
+      cursorPosition.ch <= offset + sentence.index + sentence[0].length
+    ) {
       editor.setSelection(
-        { line: cursorPosition.line, ch: sentence.index },
+        { line: cursorPosition.line, ch: offset + sentence.index },
         {
           line: cursorPosition.line,
-          ch: sentence.index + sentence[0].length,
+          ch: offset + sentence.index + sentence[0].length,
         },
       );
       found = true;
