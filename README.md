@@ -12,7 +12,9 @@ This [Obsidian](https://obsidian.md) plugin lets you manipulate sentences as a u
 
 \* On macOS, replace `Ctrl` with `Cmd`
 
----
+### Important notes
+
+- If the cursor is already at the start of a sentence or list item, 'Move to current sentence' will jump to the start of the previous sentence.
 
 ## Installing the plugin
 

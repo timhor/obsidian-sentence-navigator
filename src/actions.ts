@@ -8,6 +8,7 @@ import {
   setCursorAtNextWordCharacter,
   getPrevNonEmptyLine,
   getNextNonEmptyLine,
+  isAtStartOfListItem,
 } from './utils';
 
 export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
@@ -65,7 +66,10 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
 export const moveToStartOfCurrentSentence = (editor: Editor) => {
   let { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
 
-  if (cursorPosition.ch === 0) {
+  if (
+    cursorPosition.ch === 0 ||
+    isAtStartOfListItem(cursorPosition, paragraphText)
+  ) {
     // if cursor is already at the start of this paragraph, move to the previous paragraph
     setCursorAtEndOfLine(
       editor,

@@ -9,6 +9,7 @@ import {
   setCursorAtNextWordCharacter,
   getPrevNonEmptyLine,
   getNextNonEmptyLine,
+  isAtStartOfListItem,
 } from '../utils';
 import { State } from '../state';
 import { WHOLE_SENTENCE } from '../constants';
@@ -148,5 +149,13 @@ describe('Sentence Navigator: utils', () => {
   it('should get next non-empty line', () => {
     const nextLine = getNextNonEmptyLine(editor as any, 1);
     expect(nextLine).toEqual(3);
+  });
+
+  it('should determine if cursor is at the start of a list item', () => {
+    const paragraphText = '- text';
+    const posAtStartOfList = { line: 0, ch: 2 };
+    const posAfterStartOfList = { line: 0, ch: 3 };
+    expect(isAtStartOfListItem(posAtStartOfList, paragraphText)).toBe(true);
+    expect(isAtStartOfListItem(posAfterStartOfList, paragraphText)).toBe(false);
   });
 });

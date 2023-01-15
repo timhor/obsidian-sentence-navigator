@@ -225,6 +225,41 @@ describe('Sentence Navigator: actions', () => {
         expect(cursor).toEqual(expect.objectContaining(expectedCursorPos));
       },
     );
+
+    it.each([
+      [
+        'when cursor is at the start of a bullet list',
+        '- ',
+        { line: 1, ch: 6 },
+        { line: 0, ch: 7 },
+      ],
+      [
+        'when cursor is at the start of a numbered list',
+        '1. ',
+        { line: 1, ch: 7 },
+        { line: 0, ch: 8 },
+      ],
+      [
+        'when cursor is at the start of a checklist',
+        '- [ ] ',
+        { line: 1, ch: 10 },
+        { line: 0, ch: 11 },
+      ],
+    ])(
+      'should jump to start of previous sentence %s',
+      (_scenario, prefix, cursorPos, expectedCursorPos) => {
+        const document = `${prefix}AAA. BBB.\n${prefix}CCC.`;
+        editor.setValue(document);
+        editor.setCursor(cursorPos);
+
+        moveToStartOfCurrentSentence(editor as any);
+        moveToStartOfCurrentSentence(editor as any);
+
+        const { doc, cursor } = getDocumentAndSelection(editor);
+        expect(doc).toEqual(document);
+        expect(cursor).toEqual(expect.objectContaining(expectedCursorPos));
+      },
+    );
   });
 
   describe('moveToStartOfNextSentence', () => {

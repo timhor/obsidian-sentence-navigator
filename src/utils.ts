@@ -1,4 +1,5 @@
 import { Editor, EditorPosition } from 'obsidian';
+import { LIST_CHARACTER_REGEX } from './constants';
 import { State } from './state';
 
 export const getLineBoundaries = (editor: Editor, line: number) => ({
@@ -88,4 +89,13 @@ export const getNextNonEmptyLine = (editor: Editor, currentLine: number) => {
     nextLine++;
   }
   return nextLine;
+};
+
+export const isAtStartOfListItem = (
+  cursorPosition: EditorPosition,
+  paragraphText: string,
+) => {
+  const { ch } = cursorPosition;
+  const maybePrefix = paragraphText.slice(0, ch);
+  return LIST_CHARACTER_REGEX.test(maybePrefix);
 };
