@@ -5096,9 +5096,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"obsidian-sentence-wizard@workspace:.":
+"obsidian-sentence-navigator@workspace:.":
   version: 0.0.0-use.local
-  resolution: "obsidian-sentence-wizard@workspace:."
+  resolution: "obsidian-sentence-navigator@workspace:."
   dependencies:
     "@babel/preset-env": ^7.16.7
     "@babel/preset-typescript": ^7.16.7

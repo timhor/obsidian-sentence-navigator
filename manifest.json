@@ -1,8 +1,8 @@
 {
   "id": "obsidian-sentence-navigator",
   "name": "Sentence Navigator",
-  "version": "1.2.0",
-  "minAppVersion": "0.12.0",
+  "version": "1.3.0",
+  "minAppVersion": "1.1.0",
   "description": "Manipulate sentences as a unit of movement. Select, move and delete by whole sentences.",
   "author": "Tim Hor & Andrew Brown",
   "authorUrl": "https://github.com/timhor",
