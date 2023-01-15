@@ -4,11 +4,13 @@ This [Obsidian](https://obsidian.md) plugin lets you manipulate sentences as a u
 
 | Command                           | Shortcut \*                    |
 | --------------------------------- | ------------------------------ |
-| Delete to beginning of sentence   | `Ctrl` + `Shift` + `Backspace` |
+| Delete to start of sentence       | `Ctrl` + `Shift` + `Backspace` |
 | Delete to end of sentence         | `Ctrl` + `Shift` + `Delete`    |
 | Move to start of current sentence | Not set                        |
 | Move to start of next sentence    | Not set                        |
 | Select current sentence           | Not set                        |
+| Select to start of sentence       | Not set                        |
+| Select to end of sentence         | Not set                        |
 
 \* On macOS, replace `Ctrl` with `Cmd`
 

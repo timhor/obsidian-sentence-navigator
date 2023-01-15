@@ -21,13 +21,20 @@ export const getCursorAndParagraphText = (editor: Editor) => {
   };
 };
 
+/**
+ * Loop through every sentence in `paragraphText`. Optionally `return true` to
+ * break early and stop iterating.
+ */
 export const forEachSentence = (
   paragraphText: string,
-  callback: (sentence: RegExpMatchArray) => void,
+  callback: (sentence: RegExpMatchArray) => void | boolean,
 ) => {
   const sentences = paragraphText.matchAll(State.sentenceRegex);
   for (const sentence of sentences) {
-    callback(sentence);
+    const stopIterating = callback(sentence);
+    if (stopIterating) {
+      break;
+    }
   }
 };
 
@@ -45,6 +52,10 @@ export const setCursorAtEndOfLine = (editor: Editor, line: number) => {
   });
 };
 
+/**
+ * Move cursor to next position that is not a space, to handle leading and
+ * trailing space characters that might be in the path of deletion
+ */
 export const setCursorAtNextWordCharacter = ({
   editor,
   cursorPosition,

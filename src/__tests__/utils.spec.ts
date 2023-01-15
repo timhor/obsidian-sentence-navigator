@@ -89,6 +89,21 @@ describe('Sentence Navigator: utils', () => {
     expect(indices).toEqual([0, 16, 33]);
   });
 
+  it('should stop executing callback if callback returns true', () => {
+    const sentences: string[] = [];
+    const indices: number[] = [];
+    forEachSentence(
+      'First sentence. Second sentence! Third sentence?',
+      (sentence) => {
+        sentences.push(sentence[0]);
+        indices.push(sentence.index);
+        return true;
+      },
+    );
+    expect(sentences).toEqual(['First sentence.']);
+    expect(indices).toEqual([0]);
+  });
+
   it('should set cursor at start of line', () => {
     setCursorAtStartOfLine(editor as any, 0);
     expect(editor.getCursor()).toEqual(

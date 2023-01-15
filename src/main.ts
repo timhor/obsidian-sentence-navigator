@@ -4,6 +4,7 @@ import {
   moveToStartOfCurrentSentence,
   moveToStartOfNextSentence,
   selectSentence,
+  selectToBoundary,
 } from './actions';
 import { DEFAULT_SETTINGS, PluginSettings, SettingTab } from './settings';
 import { State } from './state';
@@ -16,7 +17,7 @@ export default class SentenceNavigator extends Plugin {
 
     this.addCommand({
       id: 'backward-delete-sentence',
-      name: 'Delete to beginning of sentence',
+      name: 'Delete to start of sentence',
       hotkeys: [{ modifiers: ['Mod', 'Shift'], key: 'Backspace' }],
       editorCallback: (editor: Editor) => deleteToBoundary(editor, 'start'),
     });
@@ -26,6 +27,18 @@ export default class SentenceNavigator extends Plugin {
       name: 'Delete to end of sentence',
       hotkeys: [{ modifiers: ['Mod', 'Shift'], key: 'Delete' }],
       editorCallback: (editor: Editor) => deleteToBoundary(editor, 'end'),
+    });
+
+    this.addCommand({
+      id: 'backward-select-sentence',
+      name: 'Select to start of sentence',
+      editorCallback: (editor: Editor) => selectToBoundary(editor, 'start'),
+    });
+
+    this.addCommand({
+      id: 'forward-select-sentence',
+      name: 'Select to end of sentence',
+      editorCallback: (editor: Editor) => selectToBoundary(editor, 'end'),
     });
 
     this.addCommand({

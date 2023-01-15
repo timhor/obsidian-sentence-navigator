@@ -14,8 +14,6 @@ import {
 export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
   let { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
 
-  // move cursor to next position that is not a space, to handle leading and
-  // trailing space characters that might be in the path of deletion
   const originalCursorPosition = cursorPosition;
   if (
     paragraphText.charAt(cursorPosition.ch) === ' ' ||
@@ -38,12 +36,13 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
       cursorPosition.ch <= sentence.index + sentence[0].length
     ) {
       if (boundary === 'start') {
-        const newParagraph =
+        const sentenceTextBeforeCursor =
           paragraphText.substring(0, sentence.index) +
           paragraphText.substring(originalCursorPosition.ch);
-        const cutPortionLength = paragraphText.length - newParagraph.length;
+        const cutPortionLength =
+          paragraphText.length - sentenceTextBeforeCursor.length;
         const { start, end } = getLineBoundaries(editor, cursorPosition.line);
-        editor.replaceRange(newParagraph, start, end);
+        editor.replaceRange(sentenceTextBeforeCursor, start, end);
         editor.setCursor({
           line: cursorPosition.line,
           ch: originalCursorPosition.ch - cutPortionLength,
@@ -57,6 +56,55 @@ export const deleteToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
         const { start, end } = getLineBoundaries(editor, cursorPosition.line);
         editor.replaceRange(newParagraph, start, end);
         editor.setCursor(originalCursorPosition);
+      }
+      done = true;
+    }
+  });
+};
+
+/**
+ * Selects from the cursor to the start or end of a sentence, with the current
+ * cursor position as an anchor. Intended to be used from inside a sentence, so
+ * does not handle any leading and trailing space characters.
+ */
+export const selectToBoundary = (editor: Editor, boundary: 'start' | 'end') => {
+  const { cursorPosition, paragraphText } = getCursorAndParagraphText(editor);
+
+  let done = false;
+  forEachSentence(paragraphText, (sentence) => {
+    if (
+      !done &&
+      cursorPosition.ch >= sentence.index &&
+      cursorPosition.ch <= sentence.index + sentence[0].length
+    ) {
+      // Don't change selection if it currently starts or ends at a boundary
+      if (
+        editor.getSelection().length > 0 &&
+        (cursorPosition.ch === sentence.index ||
+          cursorPosition.ch === sentence.index + sentence[0].length)
+      ) {
+        return true;
+      }
+
+      if (boundary === 'start') {
+        const sentenceTextBeforeCursor =
+          paragraphText.substring(0, sentence.index) +
+          paragraphText.substring(cursorPosition.ch);
+        const precedingLength =
+          paragraphText.length - sentenceTextBeforeCursor.length;
+        const start = {
+          ...cursorPosition,
+          ch: cursorPosition.ch - precedingLength,
+        };
+        editor.setSelection(cursorPosition, start);
+      } else {
+        const remainingLength =
+          sentence.index + sentence[0].length - cursorPosition.ch;
+        const end = {
+          ...cursorPosition,
+          ch: cursorPosition.ch + remainingLength,
+        };
+        editor.setSelection(cursorPosition, end);
       }
       done = true;
     }

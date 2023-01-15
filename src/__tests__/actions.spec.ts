@@ -6,6 +6,7 @@ import {
   moveToStartOfCurrentSentence,
   moveToStartOfNextSentence,
   selectSentence,
+  selectToBoundary,
 } from '../actions';
 import { State } from '../state';
 import { WHOLE_SENTENCE } from '../constants';
@@ -164,6 +165,134 @@ describe('Sentence Navigator: actions', () => {
         const { doc, cursor } = getDocumentAndSelection(editor);
         expect(doc).toEqual(expectedDoc);
         expect(cursor).toEqual(expect.objectContaining(expectedCursorPos));
+      },
+    );
+  });
+
+  describe('selectToBoundary -> start', () => {
+    it.each([
+      [
+        'when cursor is in the first sentence',
+        // preview: This is a |sentence. Here's another...
+        { line: 0, ch: 10 },
+        undefined,
+        'This is a ',
+      ],
+      [
+        'when cursor is in a middle sentence',
+        // preview: ...sentence. Here's an|other one...
+        { line: 0, ch: 29 },
+        undefined,
+        "Here's an",
+      ],
+      [
+        'when cursor is in the last sentence',
+        // preview: ...longer sentence with |several other...
+        { line: 0, ch: 86 },
+        undefined,
+        'This is a different and longer sentence with ',
+      ],
+      [
+        'when cursor is between two sentences',
+        // preview: ...another one! | This is a different...
+        { line: 0, ch: 40 },
+        undefined,
+        '',
+      ],
+      [
+        'when cursor is in another paragraph',
+        // preview: ...on a **SEPARATE** |paragraph now
+        { line: 2, ch: 29 },
+        undefined,
+        'Continuing on a **SEPARATE** ',
+      ],
+      [
+        'when cursor is on a blank line between paragraphs',
+        { line: 1, ch: 0 },
+        undefined,
+        '',
+      ],
+      [
+        'when selection head is at the start of a sentence',
+        // preview: ...sentence. {<}Here's{>} another...
+        { line: 0, ch: 26 },
+        { line: 0, ch: 20 },
+        "Here's",
+      ],
+    ])(
+      'should select to start of sentence %s',
+      (_scenario, anchor, head, expectedText) => {
+        editor.setSelection(anchor, head);
+
+        selectToBoundary(editor as any, 'start');
+
+        const { doc, selectedText } = getDocumentAndSelection(editor);
+        expect(doc).toEqual(originalDoc);
+        expect(selectedText).toEqual(expectedText);
+      },
+    );
+  });
+
+  describe('selectToBoundary -> end', () => {
+    it.each([
+      [
+        'when cursor is in the first sentence',
+        // preview: This is a |sentence. Here's another...
+        { line: 0, ch: 10 },
+        undefined,
+        'sentence.',
+      ],
+      [
+        'when cursor is in a middle sentence',
+        // preview: ...sentence. Here's an|other one...
+        { line: 0, ch: 29 },
+        undefined,
+        'other one!',
+      ],
+      [
+        'when cursor is in the last sentence',
+        // preview: ...longer sentence with |several other...
+        { line: 0, ch: 86 },
+        undefined,
+        'several other words in it?',
+      ],
+      [
+        'when cursor is between two sentences',
+        // preview: ...another one! | This is a different...
+        { line: 0, ch: 40 },
+        undefined,
+        '',
+      ],
+      [
+        'when cursor is in another paragraph',
+        // preview: ...on a **SEPARATE** |paragraph now
+        { line: 2, ch: 29 },
+        undefined,
+        'paragraph now',
+      ],
+      [
+        'when cursor is on a blank line between paragraphs',
+        { line: 1, ch: 0 },
+        undefined,
+        '',
+      ],
+      [
+        'when selection head is at the start of a sentence',
+        // preview: ...sentence. {<}Here's{>} another...
+        { line: 0, ch: 27 },
+        { line: 0, ch: 39 },
+        'another one!',
+      ],
+    ])(
+      'should select to end of sentence %s',
+      (_scenario, anchor, head, expectedText) => {
+        editor.setSelection(anchor, head);
+
+        selectToBoundary(editor as any, 'end');
+
+        const { doc, selectedText } = getDocumentAndSelection(editor);
+        expect(doc).toEqual(originalDoc);
+        expect(selectedText).toEqual(expectedText);
       },
     );
   });
