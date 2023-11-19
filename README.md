@@ -1,5 +1,8 @@
 # Sentence Navigator
 
+> [!NOTE]
+> Due to personal circumstances, active development is **paused** on this project until approximately mid-2024. Please continue to use the existing features, submit issues and contribute pull requests, but expect a delayed response.
+
 This [Obsidian](https://obsidian.md) plugin lets you manipulate sentences as a unit of movement. Select, move and delete by whole sentences. Credit for the [original idea](https://github.com/timhor/obsidian-editor-shortcuts/issues/3) goes to [@seatrout](https://github.com/seatrout).
 
 | Command                           | Shortcut \*                    |
@@ -20,7 +23,7 @@ This [Obsidian](https://obsidian.md) plugin lets you manipulate sentences as a u
 
 ## Installing the plugin
 
-Refer to the official installation instructions for third-party plugins [here](https://help.obsidian.md/Advanced+topics/Third-party+plugins#For+users).
+Refer to the official installation instructions for third-party plugins [here](https://help.obsidian.md/Advanced+topics/Third-party+plugins#For+users) and search for the plugin `Sentence Navigator`.
 
 ## Configuring settings
 
